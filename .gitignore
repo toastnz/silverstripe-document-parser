@@ -1,0 +1,5 @@
+/vendor/
+composer.lock
+/framework/
+/textextraction/
+/.idea/

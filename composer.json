@@ -1,0 +1,16 @@
+{
+    "name": "andrewandante/silverstripe-document-parser",
+    "type": "silverstripe-module",
+    "description": "Adds DocumentParser package to extract contents of .doc, .docx, .rtf and .txt files for search etc.",
+    "require": {
+        "silverstripe/textextraction": "^2.0.0",
+        "lukemadhanga/php-document-parser": "^0.1.5"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Andrew Aitken-Fincham",
+            "email": "andrew.aitkenfincham@silverstripe.com"
+        }
+    ]
+}
