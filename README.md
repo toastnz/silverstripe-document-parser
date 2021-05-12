@@ -9,3 +9,5 @@ of document types:
 - .txt
 
 Hooks into the silverstripe-textextraction module.
+
+Use 1.x line for SS3, 2.x line for SS4.
