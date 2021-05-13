@@ -4,7 +4,8 @@
     "description": "Adds DocumentParser package to extract contents of .doc, .docx, .rtf and .txt files for search etc.",
     "require": {
         "silverstripe/textextraction": "^2.0.0",
-        "lukemadhanga/php-document-parser": "^0.1.5"
+        "lukemadhanga/php-document-parser": "^0.1.5",
+        "ext-fileinfo": "*"
     },
     "license": "MIT",
     "authors": [
