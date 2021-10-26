@@ -45,6 +45,7 @@ class DocumentParserTextExtractor extends FileTextExtractor
      *
      * @param File|string $file
      * @return string
+     * @throws FileTextExtractor\Exception
      */
     public function getContent($file): string
     {
