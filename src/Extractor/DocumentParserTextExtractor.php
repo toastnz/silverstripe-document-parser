@@ -1,9 +1,19 @@
 <?php
 
+namespace AndrewAndante\SilverStripeDocumentParser\Extractor;
+
 use LukeMadhanga\DocumentParser;
+use Psr\Log\LoggerInterface;
+use SilverStripe\Assets\File;
+use SilverStripe\Core\Extensible;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\TextExtraction\Extractor\FileTextExtractor;
+use Throwable;
 
 class DocumentParserTextExtractor extends FileTextExtractor
 {
+    use Extensible;
+
     public function isAvailable(): bool
     {
         return class_exists(DocumentParser::class);
@@ -33,11 +43,13 @@ class DocumentParserTextExtractor extends FileTextExtractor
     /**
      * Extracts content and then sanitises by using strip_tags() as the parser returns HTML for docx
      *
-     * @param string $path
+     * @param File|string $file
      * @return string
+     * @throws FileTextExtractor\Exception
      */
-    public function getContent($path): string
+    public function getContent($file): string
     {
+        $path = $file instanceof File ? self::getPathFromFile($file) : $file;
         $documentParser = new DocumentParser();
         $mimeType = mime_content_type($path);
         // Workaround for old word doc mimetype
@@ -46,15 +58,18 @@ class DocumentParserTextExtractor extends FileTextExtractor
         }
 
         try {
-            return strip_tags(str_replace('<', ' <', $documentParser::parseFromFile($path, $mimeType)));
-        } catch (Exception $e) {
-            SS_Log::log(
+            $path = $file instanceof File ? self::getPathFromFile($file) : $file;
+            $text = strip_tags(str_replace('<', ' <', $documentParser::parseFromFile($path, $mimeType)));
+            $this->extend('updateParsedText', $text);
+
+            return $text;
+        } catch (Throwable $e) {
+            Injector::inst()->get(LoggerInterface::class)->info(
                 sprintf(
                     '[DocumentParserTextExtractor] Error extracting text from "%s" (message: %s)',
-                    $path,
+                    $path ?? 'unknown file',
                     $e->getMessage()
-                ),
-                SS_Log::NOTICE
+                )
             );
         }
 
