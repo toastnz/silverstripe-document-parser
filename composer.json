@@ -10,8 +10,8 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "Andrew Aitken-Fincham",
-            "email": "andrew.aitkenfincham@silverstripe.com"
+            "name": "Andrew Paxley",
+            "email": "andrew.paxley@silverstripe.com"
         }
     ],
     "autoload": {

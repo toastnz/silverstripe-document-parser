@@ -5,12 +5,15 @@ namespace AndrewAndante\SilverStripeDocumentParser\Extractor;
 use LukeMadhanga\DocumentParser;
 use Psr\Log\LoggerInterface;
 use SilverStripe\Assets\File;
+use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\TextExtraction\Extractor\FileTextExtractor;
 use Throwable;
 
 class DocumentParserTextExtractor extends FileTextExtractor
 {
+    use Extensible;
+
     public function isAvailable(): bool
     {
         return class_exists(DocumentParser::class);
@@ -54,7 +57,11 @@ class DocumentParserTextExtractor extends FileTextExtractor
         }
 
         try {
-            return strip_tags(str_replace('<', ' <', $documentParser::parseFromFile($path, $mimeType)));
+            $path = $file instanceof File ? self::getPathFromFile($file) : $file;
+            $text = strip_tags(str_replace('<', ' <', $documentParser::parseFromFile($path, $mimeType)));
+            $this->extend('updateParsedText', $text);
+
+            return $text;
         } catch (Throwable $e) {
             Injector::inst()->get(LoggerInterface::class)->info(
                 sprintf(
